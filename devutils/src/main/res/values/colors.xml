@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="jzw_transparent">#00000000</color>
+    <color name="jzw_black">#111111</color>
+    <color name="jzw_white">#ffffff</color>
+    <color name="jzw_gray">#cccccc</color>
+    <color name="jzw_gray_bg">#e6e6e6</color>
+
+    <color name="jzw_blue">#33cc99</color>
+    <color name="jzw_huan">#ff6600</color>
+    <color name="jzw_green">#258fe7</color>
+</resources>

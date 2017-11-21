@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--自定义arrowView-->
+    <declare-styleable name="JZW_ArrowItemView">
+        <attr name="jzw_arrow_title" format="string|reference" />
+        <attr name="jzw_arrow_titleSize" format="dimension" />
+        <attr name="jzw_arrow_titleColor" format="color|reference" />
+        <attr name="jzw_arrow_backColor" format="color|reference" />
+        <attr name="jzw_arrow_leftResources" format="reference|integer" />
+        <attr name="jzw_arrow_rightResources" format="reference|integer" />
+        <attr name="jzw_arrow_showRightView" format="boolean" />
+        <attr name="jzw_arrow_showLeftView" format="boolean" />
+
+    </declare-styleable>
+
+    <!--自定义titlebar-->
+    <declare-styleable name="JZW_TitleBar">
+        <attr name="jzw_bar_title" format="string" />
+        <attr name="jzw_bar_titleSize" format="dimension" />
+        <attr name="jzw_bar_titleColor" format="color" />
+        <attr name="jzw_bar_backResources" format="reference|integer" />
+        <attr name="jzw_bar_rightResources" format="reference|integer" />
+        <attr name="jzw_bar_backColor" format="color|reference" />
+        <attr name="jzw_bar_showLeftView" format="boolean" />
+        <attr name="jzw_bar_showRightView" format="boolean" />
+
+    </declare-styleable>
+</resources>

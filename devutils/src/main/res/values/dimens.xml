@@ -1,0 +1,12 @@
+<resources>
+    <dimen name="jzw_arrow_height">50dp</dimen>
+    <dimen name="jzw_title_bar_height">46dp</dimen>
+    <dimen name="jzw_font_10sp">10sp</dimen>
+    <dimen name="jzw_font_12sp">12sp</dimen>
+    <dimen name="jzw_font_14sp">14sp</dimen>
+    <dimen name="jzw_font_15sp">15sp</dimen>
+    <dimen name="jzw_font_16sp">16sp</dimen>
+    <dimen name="jzw_font_18sp">18sp</dimen>
+    <dimen name="jzw_font_20sp">20sp</dimen>
+    <dimen name="jzw_font_26sp">26sp</dimen>
+</resources>
