@@ -28,3 +28,7 @@ compile 'com.jzw.dev:devutils:1.1'
           app:jzw_bar_title="标题"
           app:jzw_bar_titleColor="#ccc"
           app:jzw_bar_titleSize="18sp" />
+          
+想体验MVP开发的点这里https://github.com/jingzhanwu/MvpBase
+Retrofit+Rxjava的一个请求库
+https://github.com/jingzhanwu/RetrofitClient
