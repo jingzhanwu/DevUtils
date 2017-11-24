@@ -6,13 +6,21 @@ Android开发工具类，常用的文件操作，bitmap操作，数据库操作�
 compile 'com.jzw.dev:devutils:1.1'
 
 ·支持数据库操作，继承BaseDao，实现对应的方法即可。
+
 ·Bitmap相关操作，使用BitmapUtil
+
 ·文件相关操作，使用FileUtil
+
 ·显示图片，使用GlideUtils
+
 ·权限操作，使用PermissionUtil
+
 ·SharedPreference操作使用SharedPrefUtils类
+
 ·Toast显示使用ToastUtil
+
 ·简单的dialog显示，使用DialogUtil
+
 ·日期和时间有CalendarUtil，DateUtil
 
 ·自定义的TitleBar，支持高度，背景色，图标自定义
@@ -30,5 +38,6 @@ compile 'com.jzw.dev:devutils:1.1'
           app:jzw_bar_titleSize="18sp" />
           
 想体验MVP开发的点这里https://github.com/jingzhanwu/MvpBase
+
 Retrofit+Rxjava的一个请求库
 https://github.com/jingzhanwu/RetrofitClient
