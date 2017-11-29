@@ -40,4 +40,4 @@ compile 'com.jzw.dev:devutils:1.1.0'
 想体验MVP开发的点这里https://github.com/jingzhanwu/MvpBase
 
 Retrofit+Rxjava的一个请求库
-https://github.com/jingzhanwu/RetrofitClient
+https://github.com/jingzhanwu/RetrofitRxjavaClient
