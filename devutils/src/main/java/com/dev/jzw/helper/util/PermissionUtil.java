@@ -20,7 +20,6 @@ public class PermissionUtil {
     public final static int RECORD_REQUESTCODE = 2;
     public static final int LOCATION_REQUESTCODE = 3;
     public static final int READ_WRITE_REQUESTCODE = 4;
-
     public static final int AUDIO_RECORDER = 5;
 
     /**
@@ -59,13 +58,23 @@ public class PermissionUtil {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE};
 
-
-    public static String[] checkAudioRecorderPermission(Context context) {
+    /**
+     * 检查是否有需要授权的权限
+     * 如果有没有开启的权限则返回去开启权限
+     *
+     * @param
+     * @since 2.5.0
+     */
+    public static String[] checkPremission(Context context, String[] premissions) {
         List<String> needPermission = findDeniedPermissions(context, audioRecorderPermissions);
         if (needPermission != null && needPermission.size() > 0) {
             return needPermission.toArray(new String[needPermission.size()]);
         }
         return null;
+    }
+
+    public static String[] checkAudioRecorderPermission(Context context) {
+        return checkPremission(context, audioRecorderPermissions);
     }
 
     /**
@@ -75,11 +84,7 @@ public class PermissionUtil {
      * @return
      */
     public static String[] checkLocationPermission(Context context) {
-        List<String> needPermission = findDeniedPermissions(context, locationPermissions);
-        if (needPermission != null && needPermission.size() > 0) {
-            return needPermission.toArray(new String[needPermission.size()]);
-        }
-        return null;
+        return checkPremission(context, locationPermissions);
     }
 
     /**
@@ -89,11 +94,7 @@ public class PermissionUtil {
      * @return
      */
     public static String[] checkRecordPermission(Context context) {
-        List<String> needPermission = findDeniedPermissions(context, recordPermissions);
-        if (needPermission != null && needPermission.size() > 0) {
-            return needPermission.toArray(new String[needPermission.size()]);
-        }
-        return null;
+        return checkPremission(context, recordPermissions);
     }
 
     /**
@@ -103,23 +104,9 @@ public class PermissionUtil {
      * @return
      */
     public static String[] checkReadWritePermission(Context context) {
-        List<String> needPermission = findDeniedPermissions(context, readWritePermissions);
-        if (needPermission != null && needPermission.size() > 0) {
-            return needPermission.toArray(new String[needPermission.size()]);
-        }
-        return null;
+        return checkPremission(context, readWritePermissions);
     }
 
-    /**
-     * 检查是否有需要授权的权限
-     * 如果有没有开启的权限则返回去开启权限
-     *
-     * @param
-     * @since 2.5.0
-     */
-    private static List<String> checkPermissions(Context context, String[] permissions) {
-        return findDeniedPermissions(context, permissions);
-    }
 
     /**
      * 获取权限集中需要申请权限的列表
