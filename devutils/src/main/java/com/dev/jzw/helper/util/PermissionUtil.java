@@ -20,14 +20,7 @@ public class PermissionUtil {
     public final static int RECORD_REQUESTCODE = 2;
     public static final int LOCATION_REQUESTCODE = 3;
     public static final int READ_WRITE_REQUESTCODE = 4;
-    public static final int AUDIO_RECORDER = 5;
 
-    /**
-     * 录音权限
-     */
-    public static final String[] audioRecorderPermissions = new String[]{
-            Manifest.permission.RECORD_AUDIO
-    };
     /**
      * APP sdcard 读写权限
      */
@@ -65,16 +58,12 @@ public class PermissionUtil {
      * @param
      * @since 2.5.0
      */
-    public static String[] checkPremission(Context context, String[] premissions) {
-        List<String> needPermission = findDeniedPermissions(context, audioRecorderPermissions);
+    public static String[] checkPremission(Context context, String[] permissions) {
+        List<String> needPermission = findDeniedPermissions(context, permissions);
         if (needPermission != null && needPermission.size() > 0) {
             return needPermission.toArray(new String[needPermission.size()]);
         }
         return null;
-    }
-
-    public static String[] checkAudioRecorderPermission(Context context) {
-        return checkPremission(context, audioRecorderPermissions);
     }
 
     /**
@@ -88,7 +77,7 @@ public class PermissionUtil {
     }
 
     /**
-     * 检查视频录制权限
+     * 检查音视频录制权限
      *
      * @param context
      * @return
