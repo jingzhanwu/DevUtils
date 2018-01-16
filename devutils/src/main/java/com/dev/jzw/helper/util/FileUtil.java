@@ -14,7 +14,7 @@ import java.text.DecimalFormat;
  */
 
 public class FileUtil {
-    private static final String PROJECT_DIR = "dev";
+    private static final String PROJECT_DIR = "daoshu";
 
     /**
      * 获取音频存储路径，data/data/项目报名/audio

@@ -49,7 +49,7 @@ public class ProgressUtil {
                 hideLoadding();
             }
         });
-        mProgressDialog.setMessage(TextUtils.isEmpty(msg) ? "请稍后..." : msg);
+        mProgressDialog.setMessage(TextUtils.isEmpty(msg) ? "请稍候..." : msg);
         mProgressDialog.show();
         return mProgressDialog;
     }
