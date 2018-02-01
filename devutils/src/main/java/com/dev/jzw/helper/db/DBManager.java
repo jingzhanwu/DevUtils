@@ -16,7 +16,7 @@ import java.util.List;
  * @describe 数据库操作管理类，主要负责对数据库的增 删 改 查等基本功能的封装
  **/
 public class DBManager {
-    private String TAG = "DBManager";
+    private String TAG = "jzw-db";
     private Context mContext;
     private SQLiteOpenHelper mSQLiteOpenHelper;
     private SQLiteDatabase mSQLiteDatabase;

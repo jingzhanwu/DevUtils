@@ -44,8 +44,8 @@ public class SQLiteHelp extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         if (db != null) {
-            Log.i(TAG, "tabname>>>>" + mTableName);
-            Log.i(TAG, "sql>>>>>" + mSql);
+            Log.i(TAG, "tabname>>" + mTableName);
+            Log.i(TAG, "sql>>" + mSql);
             db.execSQL("create table if not exists " + mTableName + mSql);
         }
     }

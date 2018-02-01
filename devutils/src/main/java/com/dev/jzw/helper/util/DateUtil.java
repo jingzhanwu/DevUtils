@@ -23,6 +23,17 @@ public class DateUtil {
     }
 
     /**
+     * 将date 转换成 指定格式的string
+     *
+     * @param date
+     * @param format
+     * @return
+     */
+    public static String getDateStr(Date date, String format) {
+        return new SimpleDateFormat(format).format(date);
+    }
+
+    /**
      * 获取昨天的时间
      **/
     public static String getYesterdayDate() {

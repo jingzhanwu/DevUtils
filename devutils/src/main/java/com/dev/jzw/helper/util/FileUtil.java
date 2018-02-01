@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
@@ -43,7 +44,7 @@ public class FileUtil {
     }
 
     /**
-     * 获取视频存储路径，data/data/项目报名/pic
+     * 获取图片存储路径，data/data/项目报名/pic
      *
      * @param context
      * @return
@@ -117,6 +118,13 @@ public class FileUtil {
         return dir.getAbsolutePath();
     }
 
+    /**
+     * 从内存储卡上获取指定文件夹名称 的目录地址
+     *
+     * @param context
+     * @param dirName 目录名
+     * @return
+     */
     public static String getDir(Context context, String dirName) {
         String cacheDir = context.getExternalCacheDir().getAbsolutePath();
         String dir = cacheDir + File.separator + dirName;
@@ -128,23 +136,36 @@ public class FileUtil {
     }
 
 
+    /**
+     * 递归删除 某一文件夹下的所有文件和子文件夹
+     *
+     * @param dir 文件夹
+     * @return
+     */
     public static boolean deleteFileFromDir(String dir) {
         File file = new File(dir);
         if (file.exists()) {
-            if (file.isFile()) {
-                return file.delete();
-            } else {
-                String[] filePaths = file.list();
-                for (String path : filePaths) {
-                    deleteFileFromDir(dir + File.separator + path);
+            if (file.isDirectory()) {
+                String[] children = file.list();
+                for (int i = 0; i < children.length; i++) {
+                    boolean success = deleteFileFromDir(children[i]);
+                    if (!success) {
+                        return false;
+                    }
                 }
-                return file.delete();
             }
+            return file.delete();
         } else {
             return true;
         }
     }
 
+    /**
+     * 删除单个文件
+     *
+     * @param fileName
+     * @return
+     */
     public static boolean deleteFile(String fileName) {
         File file = new File(fileName);
         if (file.exists() && file.isFile()) {
@@ -154,41 +175,43 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 删除音频 文件夹下的所有文件
+     */
+    public static boolean deleteAudioFile() {
+        String dir = getAudioDir();
+        return deleteFileFromDir(dir);
+    }
 
     /**
-     * 获取文件大小，并转换为对应的MB  GB  KB 等
+     * 删除内存储卡上的应用下的音频文件夹下的所有音频文件
      *
-     * @param path
-     * @return
+     * @param context
      */
-    public static String formatFileSize(String path) {
-        String fileSizeString = "";
-        String wrongSize = "0B";
-        try {
-            long fileSize = getFileSize(new File(path));
-            DecimalFormat df = new DecimalFormat("0.00");
-            if (fileSize == 0) {
-                return wrongSize;
-            }
-            if (fileSize < 1024) {
-                fileSizeString = df.format((double) fileSize) + "B";
-            } else if (fileSize < 1048576) {
-                fileSizeString = df.format((double) fileSize / 1024) + "KB";
-            } else if (fileSize < 1073741824) {
-                fileSizeString = df.format((double) fileSize / 1048576) + "MB";
-            } else {
-                fileSizeString = df.format((double) fileSize / 1073741824) + "GB";
-            }
+    public static boolean deleteAudioFile(Context context) {
+        return deleteFileFromDir(getAudioDir(context));
+    }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return fileSizeString;
+    /**
+     * 删除视频 文件夹下的所有文件
+     */
+    public static boolean deleteVideoFile() {
+        String dir = getVideoDir();
+        return deleteFileFromDir(dir);
+    }
+
+    /**
+     * 删除内存储卡上的应用下的视频文件夹下的所有视频文件
+     *
+     * @param context
+     */
+    public static boolean deleteVideoFile(Context context) {
+        return deleteFileFromDir(getVideoDir(context));
     }
 
 
     /**
-     * 获取文件 或者文件夹大小
+     * 获取文件 或者 文件的大小
      *
      * @param file
      * @return
@@ -196,21 +219,56 @@ public class FileUtil {
      */
     public static long getFileSize(File file) throws Exception {
         long size = 0;
-        if (file.exists()) {
-            if (file.isDirectory()) {
-                File[] files = file.listFiles();
-                for (int i = 0; i < files.length; i++) {
-                    size += getFileSize(files[i]);
+        try {
+            File[] fileList = file.listFiles();
+            for (int i = 0; i < fileList.length; i++) {
+                // 如果下面还有文件
+                if (fileList[i].isDirectory()) {
+                    size = size + getFileSize(fileList[i]);
+                } else {
+                    size = size + fileList[i].length();
                 }
-            } else {
-                FileInputStream fis = null;
-                fis = new FileInputStream(file);
-                size = fis.available();
             }
-        } else {
-            file.createNewFile();
-            Log.e("获取文件大小", "文件不存在!");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return size;
+    }
+
+    /**
+     * 格式化单位
+     *
+     * @param size
+     * @return
+     */
+    public static String formatFileSize(double size) {
+        double kiloByte = size / 1024;
+        if (kiloByte < 1) {
+            return "0K";
+        }
+
+        double megaByte = kiloByte / 1024;
+        if (megaByte < 1) {
+            BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
+            return result1.setScale(2, BigDecimal.ROUND_HALF_UP)
+                    .toPlainString() + "K";
+        }
+
+        double gigaByte = megaByte / 1024;
+        if (gigaByte < 1) {
+            BigDecimal result2 = new BigDecimal(Double.toString(megaByte));
+            return result2.setScale(2, BigDecimal.ROUND_HALF_UP)
+                    .toPlainString() + "M";
+        }
+
+        double teraBytes = gigaByte / 1024;
+        if (teraBytes < 1) {
+            BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
+            return result3.setScale(2, BigDecimal.ROUND_HALF_UP)
+                    .toPlainString() + "GB";
+        }
+        BigDecimal result4 = new BigDecimal(teraBytes);
+        return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString()
+                + "TB";
     }
 }

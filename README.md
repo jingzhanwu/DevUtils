@@ -3,13 +3,23 @@ Android开发工具类，常用的文件操作，bitmap操作，数据库操作�
 
 如何使用：
 
-compile 'com.jzw.dev:devutils:1.1.4'
+allprojects {
+    repositories {
+        ...
+        ...
+        maven {url 'https://dl.bintray.com/jingzhanwu/jzw/'}
+    }
+}
+
+compile 'com.jzw.dev:devutils:1.1.5'
 
 ·支持数据库操作，继承BaseDao，实现对应的方法即可。
 
 ·Bitmap相关操作，使用BitmapUtil
 
 ·文件相关操作，使用FileUtil
+
+·APP 缓存管理，使用DataCleanManager
 
 ·显示图片，使用GlideUtils
 
