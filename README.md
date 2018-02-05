@@ -3,6 +3,7 @@ Android开发工具类，常用的文件操作，bitmap操作，数据库操作�
 
 如何使用：
 
+
 allprojects {
     repositories {
         ...
