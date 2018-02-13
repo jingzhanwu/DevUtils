@@ -185,25 +185,53 @@ public class FileUtil {
     }
 
     /**
-     * 删除一个目录下的所有文件和子目录，最后删除自身
+     * 递归删除文件，
      *
      * @param dir
+     * @param deleteSelf 是否删除根文件夹本身
+     * @return
+     */
+    public static boolean deleteFileFromDir(String dir, boolean deleteSelf) {
+        File file = new File(dir);
+        return deleteFileFromDir(file, deleteSelf);
+    }
+
+    /**
+     * 递归删除文件和文件夹
+     *
+     * @param dir 要删除的根目录
+     */
+    public static boolean deleteFileFromDir(File dir) {
+        return deleteFileFromDir(dir, true);
+    }
+
+    /**
+     * 递归删除文件，需要运行时 文件读写权限，否则文件删除失败
+     *
+     * @param dir
+     * @param deleteSelf 是否删除根文件夹本身
      * @return
      */
     public static boolean deleteFileFromDir(File dir, boolean deleteSelf) {
         if (null == dir || !dir.exists()) {
             return true;
         }
+        if (dir.isFile()) {
+            return dir.delete();
+        }
         if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteFileFromDir(children[i]);
-                if (!success) {
-                    return false;
-                }
+            File[] childFile = dir.listFiles();
+            if (childFile == null || childFile.length == 0) {
+                return dir.delete();
+            }
+            for (File f : childFile) {
+                deleteFileFromDir(f);
+            }
+            if (deleteSelf) {
+                dir.delete();
             }
         }
-        return deleteSelf ? dir.delete() : true;
+        return true;
     }
 
     /**
