@@ -235,7 +235,7 @@ public class BitmapUtil {
      * @return
      */
     public static String saveBitmap(Bitmap bmp) {
-        String path = FileUtil.getImageDir();
+        String path = FileUtil.getPicDir();
         File file = new File(path, System.currentTimeMillis() + ".jpg");
         return saveBitmap(bmp, file);
     }

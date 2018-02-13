@@ -7,7 +7,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 
-version = "1.1.6" //maven 上发布版本号
+version = "1.1.7" //maven 上发布版本号
 group = "com.jzw.dev" //定义的maven group id最终引用形式，如compile 'com.jzw.devutls:1.0'，其中devutls在后面配置
 bintray {
     user = properties.getProperty("bintray.user")
