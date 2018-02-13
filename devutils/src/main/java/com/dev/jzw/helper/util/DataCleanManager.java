@@ -25,16 +25,16 @@ public class DataCleanManager {
      * @throws Exception
      */
     public static String getTotalCacheSize(Context context) throws Exception {
-        long cacheSize = FileUtil.getFileSize(context.getCacheDir());
+        long cacheSize = 0;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            //cache目录下
-            cacheSize += FileUtil.getFileSize(context.getExternalCacheDir());
-            //自定义 andio 目录下
-            cacheSize += FileUtil.getFileSize(new File(FileUtil.getAudioDir(context)));
-            //自定义 video 目录下
-            cacheSize += FileUtil.getFileSize(new File(FileUtil.getVideoDir(context)));
-            //自定义 pic 目录下
-            cacheSize += FileUtil.getFileSize(new File(FileUtil.getPicDir(context)));
+            //计算 data/data/包名/cache
+            cacheSize += FileUtil.getFileSize(context.getCacheDir());
+            //计算 data/data/包名/files
+            cacheSize += FileUtil.getFileSize(context.getFilesDir());
+            //获取外部存储卡项目目录大小
+            cacheSize += FileUtil.getFileSize(FileUtil.getExternalDir());
+            //获取/Android/data/包名/cache目录下的文件大小
+            cacheSize += FileUtil.getFileSize(FileUtil.getProjectCacheDir(context));
         }
         return FileUtil.formatFileSize(cacheSize);
     }
@@ -46,14 +46,11 @@ public class DataCleanManager {
      * @throws Exception
      */
     public static void clearAllCache(Context context) throws Exception {
-        FileUtil.deleteFileFromDir(context.getCacheDir().getAbsolutePath());
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            FileUtil.deleteFileFromDir(context.getExternalCacheDir().getAbsolutePath());
-
-            FileUtil.deleteFileFromDir(FileUtil.getAudioDir(context));
-            FileUtil.deleteFileFromDir(FileUtil.getVideoDir(context));
-            FileUtil.deleteFileFromDir(FileUtil.getPicDir(context));
+            FileUtil.deleteExternalDir();
+            FileUtil.deleteProjectCacheDir(context);
+            FileUtil.deleteFileFromDir(context.getCacheDir(), false);
+            FileUtil.deleteFileFromDir(context.getFilesDir(), false);
         }
     }
-
 }
