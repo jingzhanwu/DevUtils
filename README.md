@@ -12,7 +12,7 @@ allprojects {
     }
 }
 
-compile 'com.jzw.dev:devutils:1.1.8'
+compile 'com.jzw.dev:devutils:1.1.9'
 
 ·支持数据库操作，继承BaseDao，实现对应的方法即可。
 
@@ -47,7 +47,24 @@ compile 'com.jzw.dev:devutils:1.1.8'
           app:jzw_bar_title="标题"
           app:jzw_bar_titleColor="#ccc"
           app:jzw_bar_titleSize="18sp" />
-          
+.大图查看器
+    PictureView pic = new PictureView(activity);
+    如果你想查看的是网络图片，则请这样写：
+    
+    pic.setUrls(urls, 0);
+    如果你想查看的是本地图片，你应该这样写：
+    
+    pic.setFiles(files, 0);
+    pic.setOnDeleteItemListener(
+            new CompleteImageView.OnDeleteItemListener() {
+        @Override
+        public void onDelete(int position) {
+                                                
+        }
+    });
+    
+    打开大图查看器
+    completeImageView.create();
 想体验MVP开发的点这里https://github.com/jingzhanwu/MvpBase
 
 Retrofit+Rxjava的一个请求库
