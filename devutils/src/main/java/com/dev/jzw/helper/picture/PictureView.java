@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -57,16 +58,33 @@ public class PictureView {
 
     private ImageDownloader mImageDownloader;
 
-    public PictureView(Activity activity) {
-        this.mActivity = activity;
-        mImageDownloader = new GlideDownloader();
-        init();
+    private static PictureView mInstance;
+
+    public static PictureView with(Activity activity) {
+        return with(activity, new GlideDownloader());
     }
 
-    public PictureView(Activity activity, ImageDownloader downloader) {
-        this.mActivity = activity;
-        mImageDownloader = downloader;
-        init();
+    public static PictureView with(Activity activity, ImageDownloader downloader) {
+        get();
+        mInstance.mActivity = activity;
+        mInstance.mImageDownloader = downloader;
+        mInstance.init();
+        return get();
+    }
+
+    private static PictureView get() {
+        if (mInstance == null) {
+            synchronized (PictureView.class) {
+                if (mInstance == null) {
+                    mInstance = new PictureView();
+                }
+            }
+
+        }
+        return mInstance;
+    }
+
+    private PictureView() {
     }
 
     /**
@@ -75,7 +93,7 @@ public class PictureView {
      * @param urls
      * @param startPosition
      */
-    public void setUrls(List<String> urls, int startPosition) {
+    public PictureView setUrls(@NonNull List<String> urls, int startPosition) {
         if (mUrls == null) {
             mUrls = new ArrayList<>();
         } else {
@@ -92,6 +110,7 @@ public class PictureView {
         mStartPosition = startPosition++;
         String text = startPosition + "/" + urls.size();
         tvImageCount.setText(text);
+        return mInstance;
     }
 
     /**
@@ -100,7 +119,7 @@ public class PictureView {
      * @param files
      * @param startPosition
      */
-    public void setFiles(List<File> files, int startPosition) {
+    public PictureView setFiles(@NonNull List<File> files, int startPosition) {
         if (mFiles == null) {
             mFiles = new LinkedList<>();
         } else {
@@ -112,10 +131,13 @@ public class PictureView {
         mStartPosition = startPosition++;
         String text = startPosition + "/" + files.size();
         tvImageCount.setText(text);
+
+        return mInstance;
     }
 
-    public void setOnDeleteItemListener(OnDeleteItemListener listener) {
+    public PictureView setOnDeleteItemListener(OnDeleteItemListener listener) {
         mListener = listener;
+        return this;
     }
 
     private void init() {
@@ -127,30 +149,47 @@ public class PictureView {
         mViewPager = relativeLayout.findViewById(R.id.scale_image_view_pager);
         mDialog = new Dialog(mActivity, R.style.Dialog_Fullscreen);
         mDialog.setContentView(relativeLayout);
-        close.setOnClickListener(v -> mDialog.dismiss());
-        imDelete.setOnClickListener(v -> {
-            int size = mViews.size();
-            mFiles.remove(mSelectedPosition);
-            if (mListener != null) {
-                mListener.onDelete(mSelectedPosition);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
             }
-            mViewPager.removeView(mViews.remove(mSelectedPosition));
-            if (mSelectedPosition != size) {
-                int position = mSelectedPosition + 1;
-                String text = position + "/" + mViews.size();
-                tvImageCount.setText(text);
-            }
-            mAdapter.notifyDataSetChanged();
         });
-        imDelete.setOnClickListener(v -> {
-            try {
-                MediaStore.Images.Media.insertImage(mActivity.getContentResolver(),
-                        mDownloadFiles.get(mSelectedPosition).getAbsolutePath(),
-                        mDownloadFiles.get(mSelectedPosition).getName(), null);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+
+        imDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFiles.size() <= 0) {
+                    mDialog.dismiss();
+                    return;
+                }
+                int size = mViews.size();
+                mFiles.remove(mSelectedPosition);
+                if (mListener != null) {
+                    mListener.onDelete(mSelectedPosition);
+                }
+                mViewPager.removeView(mViews.remove(mSelectedPosition));
+                if (mSelectedPosition != size) {
+                    int position = mSelectedPosition + 1;
+                    String text = position + "/" + mViews.size();
+                    tvImageCount.setText(text);
+                }
+                mAdapter.notifyDataSetChanged();
             }
-            Snackbar.make(mViewPager, "图片保存成功", Snackbar.LENGTH_SHORT).show();
+        });
+
+        imDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    MediaStore.Images.Media.insertImage(mActivity.getContentResolver(),
+                            mDownloadFiles.get(mSelectedPosition).getAbsolutePath(),
+                            mDownloadFiles.get(mSelectedPosition).getName(), null);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Snackbar.make(mViewPager, "图片保存成功", Snackbar.LENGTH_SHORT).show();
+            }
         });
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -172,23 +211,33 @@ public class PictureView {
         });
     }
 
-    public void create() {
+    public PictureView create() {
         mDialog.show();
         mViews = new ArrayList<>();
         mAdapter = new PicPagerAdapter(mViews, mDialog);
         if (mStatus == URLS) {
-            for (String url : mUrls) {
+            for (final String url : mUrls) {
                 FrameLayout frameLayout = (FrameLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_item, null);
-                SubsamplingScaleImageView imageView = frameLayout.findViewById(R.id.scale_image_view);
+                final SubsamplingScaleImageView imageView = frameLayout.findViewById(R.id.scale_image_view);
                 mViews.add(frameLayout);
-                IOThread.getSingleThread().execute(() -> {
-                    File downLoadFile;
-                    try {
-                        downLoadFile = mImageDownloader.downLoad(url, mActivity);
-                        mDownloadFiles.add(downLoadFile);
-                        mActivity.runOnUiThread(() -> imageView.setImage(ImageSource.uri(Uri.fromFile(downLoadFile))));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
+                IOThread.getSingleThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final File downLoadFile;
+                        try {
+                            downLoadFile = mImageDownloader.downLoad(url, mActivity);
+                            mDownloadFiles.add(downLoadFile);
+
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imageView.setImage(ImageSource.uri(Uri.fromFile(downLoadFile)));
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
@@ -203,6 +252,8 @@ public class PictureView {
             mViewPager.setAdapter(mAdapter);
         }
         mViewPager.setCurrentItem(mStartPosition);
+
+        return mInstance;
     }
 
     public interface OnDeleteItemListener {

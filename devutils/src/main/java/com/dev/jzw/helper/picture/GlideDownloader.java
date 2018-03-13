@@ -19,7 +19,7 @@ public class GlideDownloader implements ImageDownloader {
     public File downLoad(String url, Activity activity) {
         File file = null;
         try {
-            file = Glide.with(activity).load(url).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+            file = Glide.with(activity.getApplicationContext()).load(url).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
         } catch (Exception e) {
             e.printStackTrace();
         }
