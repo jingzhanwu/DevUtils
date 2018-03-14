@@ -12,7 +12,7 @@ allprojects {
     }
 }
 
-compile 'com.jzw.dev:devutils:1.2.0'
+compile 'com.jzw.dev:devutils:1.2.1'
 
 ·支持数据库操作，继承BaseDao，实现对应的方法即可。
 
