@@ -1,5 +1,6 @@
 package com.jzw.dev.demo;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import com.dev.jzw.helper.picture.PictureView;
 import com.dev.jzw.helper.util.FileUtil;
 import com.dev.jzw.helper.util.PermissionUtil;
+import com.dev.jzw.helper.util.ProgressUtil;
 
 import java.io.File;
 import java.util.ArrayList;

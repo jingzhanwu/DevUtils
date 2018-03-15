@@ -38,6 +38,9 @@ public class ProgressUtil {
      */
     public static ProgressDialog showLoadding(Activity activity, String msg) {
         mReference = new WeakReference<>(activity);
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            return mProgressDialog;
+        }
         mProgressDialog = new ProgressDialog(mReference.get(), R.style.jzw_progress_dialog);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
