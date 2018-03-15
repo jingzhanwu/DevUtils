@@ -13,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.dev.jzw.helper.R;
+import com.dev.jzw.helper.picture.zoom.PhotoView;
+import com.dev.jzw.helper.util.GlideUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -218,7 +218,7 @@ public class PictureView {
         if (mStatus == URLS) {
             for (final String url : mUrls) {
                 FrameLayout frameLayout = (FrameLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_item, null);
-                final SubsamplingScaleImageView imageView = frameLayout.findViewById(R.id.scale_image_view);
+                final PhotoView imageView = frameLayout.findViewById(R.id.scale_image_view);
                 mViews.add(frameLayout);
 
                 IOThread.getSingleThread().execute(new Runnable() {
@@ -232,7 +232,9 @@ public class PictureView {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    imageView.setImage(ImageSource.uri(Uri.fromFile(downLoadFile)));
+                                    GlideUtils.loadImagByFile(mActivity.getApplicationContext()
+                                            , downLoadFile, imageView);
+                                    // imageView.setImage(ImageSource.uri(Uri.fromFile(downLoadFile)));
                                 }
                             });
                         } catch (Exception e) {
@@ -245,9 +247,10 @@ public class PictureView {
         } else if (mStatus == FILES) {
             for (File file : mFiles) {
                 FrameLayout frameLayout = (FrameLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_item, null);
-                SubsamplingScaleImageView imageView = frameLayout.findViewById(R.id.scale_image_view);
+                PhotoView imageView = frameLayout.findViewById(R.id.scale_image_view);
                 mViews.add(frameLayout);
-                imageView.setImage(ImageSource.uri(Uri.fromFile(file)));
+                GlideUtils.loadImagByFile(mActivity.getApplicationContext(),
+                        file, imageView);
             }
             mViewPager.setAdapter(mAdapter);
         }
