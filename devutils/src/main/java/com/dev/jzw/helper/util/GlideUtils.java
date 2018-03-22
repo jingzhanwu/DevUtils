@@ -39,12 +39,6 @@ public class GlideUtils {
                 .into(imageView);
     }
 
-    public static void loadImagByUrl(Context context, String url, ImageView imageView) {
-        Glide.with(context.getApplicationContext()).load(url)
-                .apply(requestOptions())
-                .into(imageView);
-    }
-
     public static void loadImagByUri(Context context, Uri uri, ImageView imageView) {
         Glide.with(context.getApplicationContext()).load(uri)
                 .apply(requestOptions())

@@ -149,6 +149,13 @@ public class PictureView {
         mViewPager = relativeLayout.findViewById(R.id.scale_image_view_pager);
         mDialog = new Dialog(mActivity, R.style.Dialog_Fullscreen);
         mDialog.setContentView(relativeLayout);
+
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,6 +228,7 @@ public class PictureView {
                 final PhotoView imageView = frameLayout.findViewById(R.id.scale_image_view);
                 mViews.add(frameLayout);
 
+                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 IOThread.getSingleThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -248,6 +256,7 @@ public class PictureView {
             for (File file : mFiles) {
                 FrameLayout frameLayout = (FrameLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_item, null);
                 PhotoView imageView = frameLayout.findViewById(R.id.scale_image_view);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 mViews.add(frameLayout);
                 GlideUtils.loadImagByFile(mActivity.getApplicationContext(),
                         file, imageView);
