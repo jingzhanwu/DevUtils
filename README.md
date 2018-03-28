@@ -4,15 +4,7 @@ Android开发工具类，常用的文件操作，bitmap操作，数据库操作�
 如何使用：
 
 
-allprojects {
-    repositories {
-        ...
-        ...
-        maven {url 'https://dl.bintray.com/jingzhanwu/jzw/'}
-    }
-}
-
-compile 'com.jzw.dev:devutils:1.2.4'
+compile 'com.jzw.dev:devutils:1.2.5'
 
 ·支持数据库操作，继承BaseDao，实现对应的方法即可。
 
@@ -34,6 +26,16 @@ compile 'com.jzw.dev:devutils:1.2.4'
 
 ·日期和时间有CalendarUtil，DateUtil
 
+.反射操作 ReflectUtil
+
+.汉字拼音转换类 Trans2PinYinUtil  FirstLetterUtil
+
+.下拉刷新控件 JSwipeRefreshLayout
+
+.地理位置信息转换 LocationUtil
+
+.支持缩放的 PhotoView
+
 ·自定义的TitleBar，支持高度，背景色，图标自定义
 
        <com.dev.jzw.helper.widget.CustomTitleBar
@@ -47,12 +49,31 @@ compile 'com.jzw.dev:devutils:1.2.4'
           app:jzw_bar_title="标题"
           app:jzw_bar_titleColor="#ccc"
           app:jzw_bar_titleSize="18sp" />
+          
 .大图查看器
-   PictureView.with(this)
+
+    1、查看本地图片，自带删除功能，设置对应的回调即可
+         PictureView.with(this)
                    .setFiles(new ArrayList<File>(), 0)
+                   .enableDelete(true)
                    .create();
                    
-想体验MVP开发的点这里https://github.com/jingzhanwu/MvpBase
+    2、查看网络图片，带有下载功能
+             PictureView.with(this)
+                       .setUrls(urls, 0)
+                       .enableDownload(true)
+                       .create();
+                       
+    3、开启关闭 删除 和下载功能
+          PictureView.enableDelete(true)
+          PictureView.enableDownload(true)
+     
+                   
+想体验MVP开发的点这里
+https://github.com/jingzhanwu/MvpBase
+
+一个包含拍照 录制 高度定制的多媒体库
+compile 'com.jzw:medialibrary:1.0.0'
 
 Retrofit+Rxjava的一个请求库
 https://github.com/jingzhanwu/RetrofitRxjavaClient

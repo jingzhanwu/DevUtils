@@ -2,7 +2,6 @@ package com.dev.jzw.helper.picture;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -60,6 +59,15 @@ public class PictureView {
 
     private static PictureView mInstance;
 
+    /**
+     * 是否开启删除功能  默认不开启
+     */
+    private boolean mEnableDelete;
+    /**
+     * 是否开启 下载按钮功能  默认不开启
+     */
+    private boolean mEnableDownload;
+
     public static PictureView with(Activity activity) {
         return with(activity, new GlideDownloader());
     }
@@ -68,8 +76,7 @@ public class PictureView {
         get();
         mInstance.mActivity = activity;
         mInstance.mImageDownloader = downloader;
-        mInstance.init();
-        return get();
+        return mInstance;
     }
 
     private static PictureView get() {
@@ -163,6 +170,7 @@ public class PictureView {
             }
         });
 
+        imDelete.setVisibility(mEnableDelete ? View.VISIBLE : View.GONE);
         imDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +193,7 @@ public class PictureView {
             }
         });
 
+        imDownload.setVisibility(mEnableDownload ? View.VISIBLE : View.GONE);
         imDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,7 +227,20 @@ public class PictureView {
         });
     }
 
+    public PictureView enableDelete(boolean enableDelete) {
+        mEnableDelete = enableDelete;
+        return mInstance;
+    }
+
+    public PictureView enableDownload(boolean download) {
+        mEnableDownload = download;
+        return mInstance;
+    }
+
     public PictureView create() {
+        if (mDialog == null) {
+            init();
+        }
         mDialog.show();
         mViews = new ArrayList<>();
         mAdapter = new PicPagerAdapter(mViews, mDialog);

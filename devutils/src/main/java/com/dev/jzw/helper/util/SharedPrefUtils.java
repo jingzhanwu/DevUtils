@@ -45,7 +45,7 @@ public class SharedPrefUtils {
     }
 
     public static String getObj(String key) {
-        return sharedPref.getString(key, "null");
+        return sharedPref.getString(key, "");
     }
 
     public static int getIntObj(String key) {
