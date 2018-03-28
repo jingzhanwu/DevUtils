@@ -73,7 +73,7 @@ compile 'com.jzw.dev:devutils:1.2.5'
 https://github.com/jingzhanwu/MvpBase
 
 一个包含拍照 录制 高度定制的多媒体库
-compile 'com.jzw:medialibrary:1.0.0'
+https://github.com/jingzhanwu/MediaLibrary
 
 Retrofit+Rxjava的一个请求库
 https://github.com/jingzhanwu/RetrofitRxjavaClient

@@ -16,9 +16,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven {
-            url 'https://dl.bintray.com/jingzhanwu/jzw/'
-        }
     }
     //编码 ，javadoc 检查忽略
     tasks.withType(Javadoc) {
