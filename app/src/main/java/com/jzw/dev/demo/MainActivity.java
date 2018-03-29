@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         PictureView.with(this)
                 .setFiles(new ArrayList<File>(), 0)
-                .enableDelete(true)
+                .enableDelete(false)
                 .enableDownload(true)
                 .create();
     }

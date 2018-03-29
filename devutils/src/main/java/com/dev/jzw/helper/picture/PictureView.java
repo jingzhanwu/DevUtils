@@ -76,6 +76,7 @@ public class PictureView {
         get();
         mInstance.mActivity = activity;
         mInstance.mImageDownloader = downloader;
+        mInstance.init();
         return mInstance;
     }
 
@@ -169,8 +170,6 @@ public class PictureView {
                 mDialog.dismiss();
             }
         });
-
-        imDelete.setVisibility(mEnableDelete ? View.VISIBLE : View.GONE);
         imDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,7 +192,7 @@ public class PictureView {
             }
         });
 
-        imDownload.setVisibility(mEnableDownload ? View.VISIBLE : View.GONE);
+
         imDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,13 +237,11 @@ public class PictureView {
     }
 
     public PictureView create() {
-        if (mDialog == null) {
-            init();
-        }
         mDialog.show();
         mViews = new ArrayList<>();
         mAdapter = new PicPagerAdapter(mViews, mDialog);
         if (mStatus == URLS) {
+            imDownload.setVisibility(mEnableDownload ? View.VISIBLE : View.GONE);
             for (final String url : mUrls) {
                 FrameLayout frameLayout = (FrameLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_item, null);
                 final PhotoView imageView = frameLayout.findViewById(R.id.scale_image_view);
@@ -275,6 +272,9 @@ public class PictureView {
             }
             mViewPager.setAdapter(mAdapter);
         } else if (mStatus == FILES) {
+
+            imDelete.setVisibility(mEnableDelete ? View.VISIBLE : View.GONE);
+
             for (File file : mFiles) {
                 FrameLayout frameLayout = (FrameLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_item, null);
                 PhotoView imageView = frameLayout.findViewById(R.id.scale_image_view);
