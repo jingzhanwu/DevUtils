@@ -4,7 +4,7 @@ Android开发工具类，常用的文件操作，bitmap操作，数据库操作�
 如何使用：
 
 
-compile 'com.jzw.dev:devutils:1.2.6'
+compile 'com.jzw.dev:devutils:2.0'
 
 ·支持数据库操作，继承BaseDao，实现对应的方法即可。
 
@@ -51,20 +51,14 @@ compile 'com.jzw.dev:devutils:1.2.6'
           app:jzw_bar_titleSize="18sp" />
           
 .大图查看器
-
-    1、查看本地图片，自带删除功能，设置对应的回调即可
-         PictureView.with(this)
-                   .setFiles(new ArrayList<File>(), 0)
-                   .enableDelete(true)
-                   .create();
                    
-    2、查看网络图片，带有下载功能
+    1、查看网络图片，带有下载功能
              PictureView.with(this)
                        .setUrls(urls, 0)
                        .enableDownload(true)
                        .create();
                        
-    3、开启关闭 删除 和下载功能
+    2、开启关闭 删除 和下载功能
           PictureView.enableDelete(true)
           PictureView.enableDownload(true)
      

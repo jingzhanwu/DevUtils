@@ -1,25 +1,11 @@
 package com.dev.jzw.helper.picture;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.provider.MediaStore;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.dev.jzw.helper.R;
-import com.dev.jzw.helper.picture.zoom.PhotoView;
-import com.dev.jzw.helper.util.GlideUtils;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,57 +16,25 @@ import java.util.List;
  * @describe 大图查看器
  **/
 public class PictureView {
-
-    private static final byte URLS = 0; //网络查看状态
-    private static final byte FILES = 1; //本地查看状态
-    private byte mStatus;
-
-    private Activity mActivity;
-    private List<String> mUrls;
-    private List<File> mFiles;
-    private List<File> mDownloadFiles;
-
-    private int mSelectedPosition;
-
-    private Dialog mDialog;
-
-    private ImageView imDelete;
-    private ImageView imDownload;
-    private TextView tvImageCount;
-    private ViewPager mViewPager;
-
-    private List<View> mViews;
-    private PicPagerAdapter mAdapter;
-
-    private OnDeleteItemListener mListener;
+    private Context mContext;
     private int mStartPosition;
-
-    private ImageDownloader mImageDownloader;
-
     private static PictureView mInstance;
-
-    /**
-     * 是否开启删除功能  默认不开启
-     */
-    private boolean mEnableDelete;
+    private List<String> mUrls;
     /**
      * 是否开启 下载按钮功能  默认不开启
      */
     private boolean mEnableDownload;
+    private boolean mEnableDelete;
+
+    private OnDeleteItemListener mCallback;
 
     public static PictureView with(Activity activity) {
-        return with(activity, new GlideDownloader());
-    }
-
-    public static PictureView with(Activity activity, ImageDownloader downloader) {
         get();
-        mInstance.mActivity = activity;
-        mInstance.mImageDownloader = downloader;
-        mInstance.init();
+        mInstance.mContext = activity;
         return mInstance;
     }
 
-    private static PictureView get() {
+    public static PictureView get() {
         if (mInstance == null) {
             synchronized (PictureView.class) {
                 if (mInstance == null) {
@@ -96,201 +50,69 @@ public class PictureView {
     }
 
     /**
-     * 设置网络图片
+     * 设置删除监听器
+     *
+     * @param callback
+     * @return
+     */
+    public PictureView setOnDeleteItemListener(OnDeleteItemListener callback) {
+        mCallback = callback;
+        return mInstance;
+    }
+
+    /**
+     * 设置图片
      *
      * @param urls
      * @param startPosition
      */
     public PictureView setUrls(@NonNull List<String> urls, int startPosition) {
-        if (mUrls == null) {
-            mUrls = new ArrayList<>();
-        } else {
-            mUrls.clear();
-        }
-        mUrls.addAll(urls);
-        mStatus = URLS;
-        imDelete.setVisibility(View.GONE);
-        if (mDownloadFiles == null) {
-            mDownloadFiles = new ArrayList<>();
-        } else {
-            mDownloadFiles.clear();
-        }
+        mUrls = urls;
         mStartPosition = startPosition++;
-        String text = startPosition + "/" + urls.size();
-        tvImageCount.setText(text);
         return mInstance;
     }
 
     /**
-     * 设置本地图片
+     * 打开下载按钮
      *
-     * @param files
-     * @param startPosition
+     * @param download
+     * @return
      */
-    public PictureView setFiles(@NonNull List<File> files, int startPosition) {
-        if (mFiles == null) {
-            mFiles = new LinkedList<>();
-        } else {
-            mFiles.clear();
-        }
-        mFiles.addAll(files);
-        mStatus = FILES;
-        imDownload.setVisibility(View.GONE);
-        mStartPosition = startPosition++;
-        String text = startPosition + "/" + files.size();
-        tvImageCount.setText(text);
-
-        return mInstance;
-    }
-
-    public PictureView setOnDeleteItemListener(OnDeleteItemListener listener) {
-        mListener = listener;
-        return this;
-    }
-
-    private void init() {
-        RelativeLayout relativeLayout = (RelativeLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_dialog, null);
-        ImageView close = relativeLayout.findViewById(R.id.scale_image_close);
-        imDelete = relativeLayout.findViewById(R.id.scale_image_delete);
-        imDownload = relativeLayout.findViewById(R.id.scale_image_save);
-        tvImageCount = relativeLayout.findViewById(R.id.scale_image_count);
-        mViewPager = relativeLayout.findViewById(R.id.scale_image_view_pager);
-        mDialog = new Dialog(mActivity, R.style.Dialog_Fullscreen);
-        mDialog.setContentView(relativeLayout);
-
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
-        imDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mFiles.size() <= 0) {
-                    mDialog.dismiss();
-                    return;
-                }
-                int size = mViews.size();
-                mFiles.remove(mSelectedPosition);
-                if (mListener != null) {
-                    mListener.onDelete(mSelectedPosition);
-                }
-                mViewPager.removeView(mViews.remove(mSelectedPosition));
-                if (mSelectedPosition != size) {
-                    int position = mSelectedPosition + 1;
-                    String text = position + "/" + mViews.size();
-                    tvImageCount.setText(text);
-                }
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-
-
-        imDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    MediaStore.Images.Media.insertImage(mActivity.getContentResolver(),
-                            mDownloadFiles.get(mSelectedPosition).getAbsolutePath(),
-                            mDownloadFiles.get(mSelectedPosition).getName(), null);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Snackbar.make(mViewPager, "图片保存成功", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mSelectedPosition = position;
-                String text = ++position + "/" + mViews.size();
-                tvImageCount.setText(text);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-    }
-
-    public PictureView enableDelete(boolean enableDelete) {
-        mEnableDelete = enableDelete;
-        return mInstance;
-    }
-
     public PictureView enableDownload(boolean download) {
         mEnableDownload = download;
         return mInstance;
     }
 
-    public PictureView create() {
-        mDialog.show();
-        mViews = new ArrayList<>();
-        mAdapter = new PicPagerAdapter(mViews, mDialog);
-        if (mStatus == URLS) {
-            imDownload.setVisibility(mEnableDownload ? View.VISIBLE : View.GONE);
-            for (final String url : mUrls) {
-                FrameLayout frameLayout = (FrameLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_item, null);
-                final PhotoView imageView = frameLayout.findViewById(R.id.scale_image_view);
-                mViews.add(frameLayout);
-
-                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                IOThread.getSingleThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        final File downLoadFile;
-                        try {
-                            downLoadFile = mImageDownloader.downLoad(url, mActivity);
-                            mDownloadFiles.add(downLoadFile);
-
-                            mActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    GlideUtils.loadImagByFile(mActivity.getApplicationContext()
-                                            , downLoadFile, imageView);
-                                    // imageView.setImage(ImageSource.uri(Uri.fromFile(downLoadFile)));
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-            mViewPager.setAdapter(mAdapter);
-        } else if (mStatus == FILES) {
-
-            imDelete.setVisibility(mEnableDelete ? View.VISIBLE : View.GONE);
-
-            for (File file : mFiles) {
-                FrameLayout frameLayout = (FrameLayout) mActivity.getLayoutInflater().inflate(R.layout.pic_item, null);
-                PhotoView imageView = frameLayout.findViewById(R.id.scale_image_view);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                mViews.add(frameLayout);
-                GlideUtils.loadImagByFile(mActivity.getApplicationContext(),
-                        file, imageView);
-            }
-            mViewPager.setAdapter(mAdapter);
-        }
-        mViewPager.setCurrentItem(mStartPosition);
-
+    /**
+     * 打开删除按钮
+     *
+     * @param delete
+     * @return
+     */
+    public PictureView enableDelete(boolean delete) {
+        mEnableDelete = delete;
         return mInstance;
     }
 
-    public interface OnDeleteItemListener {
-        void onDelete(int position);
+    /**
+     * 删除调用
+     *
+     * @param position
+     */
+    public void onDelete(int position) {
+        if (mCallback != null) {
+            mCallback.onDelete(position);
+        }
+    }
+
+    public PictureView create() {
+
+        Intent intent = new Intent(mContext, PictureActivity.class);
+        intent.putStringArrayListExtra("url", (ArrayList<String>) mUrls);
+        intent.putExtra("position", mStartPosition);
+        intent.putExtra("download", mEnableDownload);
+        intent.putExtra("delete", mEnableDelete);
+        mContext.startActivity(intent);
+        return mInstance;
     }
 }

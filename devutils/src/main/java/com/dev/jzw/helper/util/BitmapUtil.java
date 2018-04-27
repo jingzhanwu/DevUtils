@@ -8,7 +8,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Build;
+import android.text.TextUtils;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -194,38 +196,25 @@ public class BitmapUtil {
     /**
      * 保存一个bitmap 到指定的文件
      *
-     * @param file   文件的全名
+     * @param fileName 文件的全名
      * @param bitmap
      * @return
      */
-    public static String saveBitmap(Bitmap bitmap, File file) {
-        if (file == null) {
-            return null;
+    public static String saveBitmap(Bitmap bitmap, String fileName) {
+        if (bitmap == null || TextUtils.isEmpty(fileName)) {
+            return "";
         }
-
-        if (file.exists()) {
-            file.delete();
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        FileOutputStream out = null;
         try {
-            out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            FileOutputStream fout = new FileOutputStream(fileName);
+            BufferedOutputStream bos = new BufferedOutputStream(fout);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+            return fileName;
         } catch (IOException e) {
             e.printStackTrace();
+            return "";
         }
-        if (bitmap != null) {
-            bitmap.recycle();
-        }
-        return file.getAbsolutePath();
     }
 
     /**
@@ -235,9 +224,13 @@ public class BitmapUtil {
      * @return
      */
     public static String saveBitmap(Bitmap bmp) {
-        String path = FileUtil.getPicDir();
-        File file = new File(path, System.currentTimeMillis() + ".jpg");
-        return saveBitmap(bmp, file);
+        long dataTake = System.currentTimeMillis();
+        String fileName = FileUtil.getPicDir() + File.separator + "picture_" + dataTake + ".jpg";
+        File file = new File(fileName);
+        if (file.exists()) {
+            file.delete();
+        }
+        return saveBitmap(bmp, fileName);
     }
 
 
@@ -292,11 +285,11 @@ public class BitmapUtil {
                 initSize = Math.round((float) width / (float) outWidth);
             }
         }
-    /*
-     * the function rounds up the sample size to a power of 2 or multiple of 8 because
-     * BitmapFactory only honors sample size this way. For example, BitmapFactory
-     * down samples an image by 2 even though the request is 3.
-     */
+        /*
+         * the function rounds up the sample size to a power of 2 or multiple of 8 because
+         * BitmapFactory only honors sample size this way. For example, BitmapFactory
+         * down samples an image by 2 even though the request is 3.
+         */
         int inSampleSize;
         if (initSize <= 8) {
             inSampleSize = 1;

@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.dev.jzw.helper.picture.zoom.PhotoView
+    <com.bm.library.PhotoView
         android:id="@+id/scale_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerInside" />
+        android:scaleType="fitCenter"
+        android:layout_gravity="center"/>
 
 </FrameLayout>

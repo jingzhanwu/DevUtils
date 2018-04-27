@@ -1,8 +1,10 @@
 package com.dev.jzw.helper.picture;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.target.Target;
 
 import java.io.File;

@@ -1,6 +1,7 @@
 package com.dev.jzw.helper.picture;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 
 import java.io.File;
 
