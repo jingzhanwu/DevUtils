@@ -4,7 +4,7 @@ Android开发工具类，常用的文件操作，bitmap操作，数据库操作�
 如何使用：
 
 
-compile 'com.jzw.dev:devutils:2.1'
+compile 'com.jzw.dev:devutils:2.2'
 
 ·支持数据库操作，继承BaseDao，实现对应的方法即可。
 
@@ -34,6 +34,8 @@ compile 'com.jzw.dev:devutils:2.1'
 
 .地理位置信息转换 LocationUtil
 
+.支持方京东地址选择view
+
 .支持缩放的 PhotoView
 
 ·自定义的TitleBar，支持高度，背景色，图标自定义
@@ -62,7 +64,69 @@ compile 'com.jzw.dev:devutils:2.1'
           PictureView.enableDelete(true)
           PictureView.enableDownload(true)
      
-                   
+
+.仿京东多级列表选择器
+
+      1、设置容器view
+         content = findViewById(R.id.content);
+
+      2、初始化数据
+         具体的实体实现ISelectorEntry接口,并实现对应方法
+         public class DicTestInfo implements ISelectorEntry<DicTestInfo> {
+
+             private String id;
+             private String value;
+             private String type;
+             private String orgName;
+             private List<DicTestInfo> list;
+
+             @Override
+             public String getSelectorName() {
+                 return getValue();
+             }
+
+             @Override
+             public String getSelectorId() {
+                 return getId();
+             }
+
+             @Override
+             public List<DicTestInfo> getSelectorChildreen() {
+                 return getList();
+             }
+
+            }
+
+       3、初始化选择器
+
+          SelectorProvider provider = new SelectorProvider(this, 3);
+             provider.setShowResultView(false);
+             provider.setData(list);
+
+              //其他设置的方法省略
+
+             provider.setOnSelectListener(new SelectorProvider.OnSelectorListener() {
+                 @Override
+                 public void onSelected(List<ISelectorEntry> datas) {
+                     DicTestInfo dic5 = (DicTestInfo) datas.get(0);
+
+                 }
+             });
+
+             provider.setOnDialogCloseListener(new SelectorProvider.OnDialogCloseListener() {
+                 @Override
+                 public void dialogclose() {
+                     //关闭回调
+
+                 }
+             });
+
+        4、添加选择器到viewGroup
+
+            View view = provider.getSelectorView();
+            content.addView(view, 0);
+
+
 想体验MVP开发的点这里
 https://github.com/jingzhanwu/MvpBase
 

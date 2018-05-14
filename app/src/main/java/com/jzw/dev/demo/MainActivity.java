@@ -1,5 +1,6 @@
 package com.jzw.dev.demo;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
                         })
                         .create();
 
+            }
+        });
+
+        findViewById(R.id.btn_selector).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(MainActivity.this,TestProvider.class);
+                startActivity(intent);
             }
         });
     }
