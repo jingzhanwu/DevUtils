@@ -4,7 +4,7 @@ Android开发工具类，常用的文件操作，bitmap操作，数据库操作�
 如何使用：
 
 
-compile 'com.jzw.dev:devutils:2.2'
+compile 'com.jzw.dev:devutils:2.3'
 
 ·支持数据库操作，继承BaseDao，实现对应的方法即可。
 
@@ -100,7 +100,6 @@ compile 'com.jzw.dev:devutils:2.2'
        3、初始化选择器
 
           SelectorProvider provider = new SelectorProvider(this, 3);
-             provider.setShowResultView(false);
              provider.setData(list);
 
               //其他设置的方法省略

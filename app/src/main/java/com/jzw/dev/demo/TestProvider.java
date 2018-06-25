@@ -58,8 +58,7 @@ public class TestProvider extends AppCompatActivity {
         list.add(dic4);
 
 
-        SelectorProvider provider = new SelectorProvider(this, 3);
-        provider.setShowResultView(false);
+        final SelectorProvider provider = new SelectorProvider(this, 3);
         provider.setData(list);
 
         provider.setOnSelectListener(new SelectorProvider.OnSelectorListener() {

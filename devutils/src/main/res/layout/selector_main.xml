@@ -6,34 +6,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/layout_result"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tv_selector_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="10dp"
-            android:layout_toLeftOf="@+id/iv_colse"
-            android:text="所选内容"
-            android:textColor="#000000"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/iv_colse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:padding="10dp"
-            android:src="@drawable/ic_selector_close" />
-    </RelativeLayout>
-
-    <View style="@style/view_line" />
-
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -41,8 +13,9 @@
             android:id="@+id/layout_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/btn_commit"
             android:orientation="horizontal">
-
 
         </LinearLayout>
 
@@ -61,6 +34,8 @@
             android:layout_width="0dp"
             android:layout_height="2dp"
             android:layout_below="@+id/layout_tab"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/btn_commit"
             android:background="@android:color/holo_red_light" />
     </RelativeLayout>
 

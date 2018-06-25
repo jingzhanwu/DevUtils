@@ -88,24 +88,16 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
     private LinearLayout layout_tab;
     private TextView btnTakeData;
     private ProgressBar progressBar;
-    private TextView tvText;
 
     private View indicatorView;
     private ListView listView;
-    private View resultView;
     //iten选择监听器
     private OnSelectorListener listener;
     private OnDialogCloseListener dialogCloseListener;
 
     //UI部分
-    private ImageView iv_colse;
     private int selectedColor;
     private int unSelectedColor;
-
-    /**
-     * 是否显示结果view
-     */
-    private boolean mShowResultView;
 
     /**
      * 默认构造函数，
@@ -123,16 +115,11 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
 
     private void initViews() {
         mView = inflater.inflate(R.layout.selector_main, null);
-        tvText = mView.findViewById(R.id.tv_selector_text);
         btnTakeData = mView.findViewById(R.id.btn_commit);
         progressBar = mView.findViewById(R.id.progressBar);//进度条
-        iv_colse = mView.findViewById(R.id.iv_colse);
         listView = mView.findViewById(R.id.listView);//listview
         layout_tab = mView.findViewById(R.id.layout_tab);
         indicatorView = mView.findViewById(R.id.indicator); //指示器
-
-        resultView = mView.findViewById(R.id.layout_result);
-        resultView.setVisibility(mShowResultView ? View.VISIBLE : View.GONE);
     }
 
     private void init() {
@@ -155,7 +142,6 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
             layout_tab.addView(tabView, i);
         }
         listView.setOnItemClickListener(this);
-        iv_colse.setOnClickListener(new onCloseClickListener());
         btnTakeData.setOnClickListener(new onSelectClickListener());
         updateIndicator();
     }
@@ -347,18 +333,6 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
     }
 
     /**
-     * 设置是否显示结果view
-     *
-     * @param show
-     */
-    public void setShowResultView(boolean show) {
-        mShowResultView = show;
-        if (resultView != null) {
-            resultView.setVisibility(mShowResultView ? View.VISIBLE : View.GONE);
-        }
-    }
-
-    /**
      * 选择结果回调
      */
     class onSelectClickListener implements View.OnClickListener {
@@ -412,15 +386,6 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
         }
         mSelectedNames.put(mCurrentTabIndex, data.getSelectorName());
 
-        //更新选中的数据 显示顶部
-        StringBuffer buffer = new StringBuffer();
-        buffer.delete(0, buffer.length());
-        for (Map.Entry<Integer, String> map : mSelectedNames.entrySet()) {
-            buffer.append(map.getValue());
-            buffer.append(" ");
-        }
-
-        tvText.setText(buffer.toString());
         //更新本tab列表
         mAdapters.get(mCurrentTabIndex).notifyDataSetChanged();
 
