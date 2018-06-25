@@ -37,7 +37,7 @@ import java.util.Map;
  * @describe 多级列表选择器
  **/
 @SuppressLint("NewApi")
-public class SelectorProvider implements AdapterView.OnItemClickListener {
+public class SelectorProvider<T extends ISelectorEntry> implements AdapterView.OnItemClickListener {
     /**
      * 层级深度
      */
@@ -45,11 +45,11 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
     /**
      * 各个tab的源数据,key==tab的索引
      */
-    private ArrayMap<Integer, List<ISelectorEntry>> mSourceData;
+    private ArrayMap<Integer, List<T>> mSourceData;
     /**
      * 保存当前选中的item数据按照tab的先后顺序排列
      */
-    private List<ISelectorEntry> mSelectedData;
+    private List<T> mSelectedData;
     /**
      * 保存大年选中tab的iten的name值
      */
@@ -78,7 +78,7 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
     /**
      * 源数据
      */
-    private List<ISelectorEntry> mDatas;
+    private List<T> mDatas;
 
     private static final int INDEX_INVALID = -1;
     private Context mContext;
@@ -92,8 +92,7 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
     private View indicatorView;
     private ListView listView;
     //iten选择监听器
-    private OnSelectorListener listener;
-    private OnDialogCloseListener dialogCloseListener;
+    private OnSelectorListener<T> listener;
 
     //UI部分
     private int selectedColor;
@@ -146,15 +145,15 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
         updateIndicator();
     }
 
-    public void initAdapters() {
+    private void initAdapters() {
         mAdapters = new ArrayMap<>();
         for (int i = 0; i < mTabViewMap.size(); i++) {
-            SelectorAdapter adapter = new SelectorAdapter(new ArrayList<ISelectorEntry>(), i);
+            SelectorAdapter adapter = new SelectorAdapter(new ArrayList<T>(), i);
             mAdapters.put(i, adapter);
         }
     }
 
-    public void setData(List<ISelectorEntry> data) {
+    public void setData(List<T> data) {
         if (mSourceData == null) {
             mSourceData = new ArrayMap<>();
         } else {
@@ -184,7 +183,7 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
 
             int what = msg.what;
             //要显示的数据
-            List<ISelectorEntry> data = (List<ISelectorEntry>) msg.obj;
+            List<T> data = (List<T>) msg.obj;
             if (Lists.notEmpty(data)) {
                 mSourceData.put(what, data);
                 SelectorAdapter adapter = mAdapters.get(what);
@@ -205,7 +204,7 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
     /**
      * tab项点击事件处理
      */
-    public void tabClickChange() {
+    private void tabClickChange() {
         //设置对应的适配器到列表
         listView.setAdapter(mAdapters.get(mCurrentTabIndex));
         //获取当前选中的tab的列表iten索引
@@ -342,22 +341,6 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
             if (listener != null) {
                 listener.onSelected(mSelectedData);
             }
-            if (dialogCloseListener != null) {
-                dialogCloseListener.dialogclose();
-            }
-        }
-    }
-
-    /**
-     * 点击右边关闭dialog监听
-     */
-    class onCloseClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-            if (dialogCloseListener != null) {
-                dialogCloseListener.dialogclose();
-            }
         }
     }
 
@@ -365,7 +348,7 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         //获取选中item的数据
-        ISelectorEntry data = mAdapters.get(mCurrentTabIndex).getItem(position);
+        T data = mAdapters.get(mCurrentTabIndex).getItem(position);
         //将数据与tab对应并保存到map
         mSelectedData.add(mCurrentTabIndex, data);
         //保存对应的item位置
@@ -415,7 +398,7 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
      * @param tabIndex 要更新数据的tab位置
      * @param data
      */
-    public void changeData(int tabIndex, List<ISelectorEntry> data) {
+    private void changeData(int tabIndex, List<T> data) {
         progressBar.setVisibility(View.VISIBLE);
         handler.sendMessage(Message.obtain(handler, tabIndex, data));
     }
@@ -442,17 +425,17 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
     /**
      * 列表适配器
      */
-    class SelectorAdapter extends BaseAdapter {
+    private class SelectorAdapter extends BaseAdapter {
 
-        private List<ISelectorEntry> data;
+        private List<T> data;
         private int tab = 0;
 
-        public SelectorAdapter(List<ISelectorEntry> data, int tabFlag) {
+        public SelectorAdapter(List<T> data, int tabFlag) {
             this.data = data;
             this.tab = tabFlag;
         }
 
-        public void setData(List<ISelectorEntry> dataList) {
+        public void setData(List<T> dataList) {
             clearData();
             data = dataList;
         }
@@ -470,7 +453,7 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
         }
 
         @Override
-        public ISelectorEntry getItem(int position) {
+        public T getItem(int position) {
             return data.get(position);
         }
 
@@ -495,7 +478,7 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
                 holder = (Holder) convertView.getTag();
             }
 
-            ISelectorEntry item = getItem(position);
+            T item = getItem(position);
             holder.textView.setText(item.getSelectorName());
 
             int index = mItemIndexMap.get(tab).intValue();
@@ -517,31 +500,19 @@ public class SelectorProvider implements AdapterView.OnItemClickListener {
      *
      * @param listener
      */
-    public void setOnSelectListener(OnSelectorListener listener) {
+    public void setOnSelectListener(OnSelectorListener<T> listener) {
         this.listener = listener;
     }
 
     /**
      * item 选择监听器
      */
-    public interface OnSelectorListener {
+    public interface OnSelectorListener<D extends ISelectorEntry> {
         /**
          * 返回数据
          *
          * @param datas
          */
-        void onSelected(List<ISelectorEntry> datas);
-    }
-
-
-    public interface OnDialogCloseListener {
-        void dialogclose();
-    }
-
-    /**
-     * 设置close监听
-     */
-    public void setOnDialogCloseListener(OnDialogCloseListener listener) {
-        this.dialogCloseListener = listener;
+        void onSelected(List<D> datas);
     }
 }

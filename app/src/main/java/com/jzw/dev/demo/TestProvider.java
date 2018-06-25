@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 
 
 import com.dev.jzw.helper.selector.SelectorProvider;
-import com.dev.jzw.helper.selector.ISelectorEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class TestProvider extends AppCompatActivity {
 
 
     public void setData() {
-        List<ISelectorEntry> list = new ArrayList<>();
+        List<DicTestInfo> list = new ArrayList<>();
         DicTestInfo dic = new DicTestInfo("001", "景占午", "1", "西安");
         dic.setList(getData());
 
@@ -58,21 +57,13 @@ public class TestProvider extends AppCompatActivity {
         list.add(dic4);
 
 
-        final SelectorProvider provider = new SelectorProvider(this, 3);
+        SelectorProvider<DicTestInfo> provider = new SelectorProvider<>(this, 3);
         provider.setData(list);
-
-        provider.setOnSelectListener(new SelectorProvider.OnSelectorListener() {
+        provider.setOnSelectListener(new SelectorProvider.OnSelectorListener<DicTestInfo>() {
             @Override
-            public void onSelected(List<ISelectorEntry> datas) {
-                DicTestInfo dic5 = (DicTestInfo) datas.get(0);
+            public void onSelected(List<DicTestInfo> datas) {
+                DicTestInfo dic5 = datas.get(0);
                 System.out.println("回调结果》》" + dic5.getOrgName());
-            }
-        });
-
-        provider.setOnDialogCloseListener(new SelectorProvider.OnDialogCloseListener() {
-            @Override
-            public void dialogclose() {
-                //关闭回调
                 finish();
             }
         });
