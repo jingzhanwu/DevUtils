@@ -51,7 +51,7 @@ public class SelectorProvider<T extends ISelectorEntry> implements AdapterView.O
      */
     private List<T> mSelectedData;
     /**
-     * 保存大年选中tab的iten的name值
+     * 保存当前选中tab的iten的name值
      */
     private ArrayMap<Integer, String> mSelectedNames;
 

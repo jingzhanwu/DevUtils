@@ -10,7 +10,8 @@ package com.dev.jzw.helper.util;
 public class LocationUtil {
 
     //地球平均半径
-    private static final double EARTH_RADIUS = 6378.137;
+    //  private static final double EARTH_RADIUS = 6378.137;
+    private static final double EARTH_RADIUS = 6371.393;
 
     /**
      * 根据两点间经纬度坐标（double值），计算两点间距离，单位为米
@@ -33,7 +34,8 @@ public class LocationUtil {
                 )
         );
         s = s * EARTH_RADIUS;
-        s = Math.round(s * 10000) / 10000;
+        //s = Math.round(s * 10000) / 10000;
+        s = Math.round(s * 1000);
         String ext = "m";
         if (s > 1000) {
             //转换成公里
