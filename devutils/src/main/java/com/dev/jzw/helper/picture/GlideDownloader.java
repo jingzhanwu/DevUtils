@@ -16,7 +16,7 @@ import java.io.File;
  * @change
  * @describe Glide 下载器
  **/
-public class GlideDownloader implements ImageDownloader {
+public class GlideDownloader implements ImageDownloader<File> {
     @Override
     public File downLoad(String url, Activity activity) {
         File file = null;

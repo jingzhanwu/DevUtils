@@ -46,10 +46,90 @@ public class BitmapUtil {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;//只读边,不读内容
         BitmapFactory.decodeFile(filePath, options);
+
+
         // 获取尺寸压缩倍数
         options.inSampleSize = getRatioSize(options.outWidth, options.outHeight, outWidth, outHeight);
 
         return loadBitmap2File(options, filePath);
+    }
+
+    /**
+     * 缩放图片
+     *
+     * @param imagePath
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public static Bitmap decodeScaleImage(String imagePath, int reqWidth, int reqHeight) {
+        // First decode with inJustDecodeBounds=true to check dimensions
+        BitmapFactory.Options options = getBitmapOptions(imagePath);
+
+        // Calculate inSampleSize
+        int sampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inSampleSize = sampleSize;
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Bitmap bm = BitmapFactory.decodeFile(imagePath, options);
+        //图片旋转角度
+        int degree = readPictureDegree(imagePath);
+        Bitmap rotateBm = null;
+        if (bm != null && degree != 0) {
+            rotateBm = rotateImageView(degree, bm);
+            bm.recycle();
+            bm = null;
+            return rotateBm;
+        } else {
+            return bm;
+        }
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio > widthRatio ? heightRatio : widthRatio;
+        }
+
+        return inSampleSize;
+    }
+
+    /*
+     * 旋转图片
+     *
+     * @param angle
+     *
+     * @param bitmap
+     *
+     * @return Bitmap
+     */
+    public static Bitmap rotateImageView(int angle, Bitmap bitmap) {
+        // 旋转图片 动作
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        // 创建新的图片
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return resizedBitmap;
+    }
+
+    /**
+     * get bitmap options
+     *
+     * @param imagePath
+     * @return
+     */
+    public static BitmapFactory.Options getBitmapOptions(String imagePath) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, options);
+        return options;
     }
 
     /**

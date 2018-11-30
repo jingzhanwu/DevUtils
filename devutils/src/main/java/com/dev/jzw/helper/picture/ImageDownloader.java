@@ -12,6 +12,6 @@ import java.io.File;
  * @change
  * @describe 下载图片的抽象接口
  **/
-public interface ImageDownloader {
-    File downLoad(String url, Activity activity);
+public interface ImageDownloader<T> {
+    T downLoad(String url, Activity activity);
 }

@@ -1,13 +1,10 @@
 package com.dev.jzw.helper.picture;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
@@ -27,11 +24,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.dev.jzw.helper.R;
+import com.dev.jzw.helper.util.BitmapUtil;
 import com.dev.jzw.helper.util.ToastUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +39,9 @@ import java.util.List;
  * @describe describe
  **/
 public class PictureActivity extends AppCompatActivity {
+    //图片最大尺寸
+    private int screenW = 720;
+    private int screenH = 1080;
     private ImageView imDownload;
     private ImageView ivDelete;
     private TextView tvImageCount;
@@ -102,7 +102,7 @@ public class PictureActivity extends AppCompatActivity {
         setUrlStatus();
         imDownload.setVisibility(View.GONE);
         ivDelete.setVisibility(View.GONE);
-        int position = mSelectedPosition + 1;
+        int position = mStartPosition + 1;
         String text = position + "/" + mUrls.size();
         tvImageCount.setText(text);
 
@@ -228,6 +228,60 @@ public class PictureActivity extends AppCompatActivity {
 
     }
 
+    private void displayImage(PhotoView imageView, Bitmap bmp) {
+        try {
+            if (bmp != null) {
+                int w = bmp.getWidth();
+                int h = bmp.getHeight();
+                if (w > screenW || h > screenH) {
+                    String filePath = BitmapUtil.saveBitmap(bmp);
+                    Bitmap bitmap = BitmapUtil.decodeScaleImage(filePath, screenW, screenH);
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                } else {
+                    imageView.setImageBitmap(bmp);
+                }
+                bmp = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            dismissDialog();
+        }
+    }
+
+    private void displayNetImage(String url, final PhotoView imageView) {
+        if (!TextUtils.isEmpty(url)) {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(this.getApplicationContext())
+                    .asBitmap()
+                    .load(url)
+                    .apply(options)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onLoadStarted(@Nullable Drawable placeholder) {
+                            super.onLoadStarted(placeholder);
+                            showPleaseDialog();
+                        }
+
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            super.onLoadFailed(errorDrawable);
+                            dismissDialog();
+                        }
+
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            displayImage(imageView, resource);
+                            dismissDialog();
+                        }
+                    });
+
+
+        }
+
+    }
 
     protected class PicPagerAdapter extends PagerAdapter {
         private Context context;
@@ -242,33 +296,10 @@ public class PictureActivity extends AppCompatActivity {
             final PhotoView imageView = contentView.findViewById(R.id.scale_image_view);
             imageView.enable();
             String url = mUrls.get(position);
-            if (mStatus == URLS) {
-                showPleaseDialog();
-            }
-            if (!TextUtils.isEmpty(url)) {
-                RequestOptions options = new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL);
-                Glide.with(context.getApplicationContext())
-                        .asBitmap()
-                        .load(url)
-                        .apply(options)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                                super.onLoadFailed(errorDrawable);
-                                dismissDialog();
-                            }
-
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                dismissDialog();
-                                imageView.setImageBitmap(resource);
-                            }
-                        });
-
-
-            }
-
+//            if (mStatus == URLS) {
+//                showPleaseDialog();
+//            }
+            displayNetImage(url, imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

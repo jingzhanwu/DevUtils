@@ -36,6 +36,10 @@ public class DisplayUtil {
         return c.getResources().getDisplayMetrics().widthPixels;
     }
 
+    public static int getScreenHeight(Context c) {
+        return c.getResources().getDisplayMetrics().heightPixels;
+    }
+
     /**
      * 获取旋转角度
      */

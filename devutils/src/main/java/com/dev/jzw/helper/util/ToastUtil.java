@@ -19,6 +19,14 @@ public class ToastUtil {
 
     public static void showToast(Context context, String msg) {
         if (buildToast(context, msg) != null) {
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    public static void showToastLong(Context context, String msg) {
+        if (buildToast(context, msg) != null) {
+            toast.setDuration(Toast.LENGTH_LONG);
             toast.show();
         }
     }

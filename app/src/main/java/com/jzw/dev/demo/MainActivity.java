@@ -28,11 +28,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final ArrayList<String> list = new ArrayList<>();
-        list.add("http://www.taopic.com/uploads/allimg/140320/235013-14032020515270.jpg");
-        list.add("http://pic33.photophoto.cn/20141130/0036036820486922_b.jpg");
-        list.add("http://pic33.photophoto.cn/20141207/0036036318497670_b.jpg");
-        list.add("http://pic29.photophoto.cn/20131007/0036036837990605_b.jpg");
-        list.add("http://pic27.photophoto.cn/20130621/0036036342621752_b.jpg");
+        list.add("http://10.168.31.224:8888/group1/M00/00/13/Cqgf4Fv_UuuARpsyAJDjCInS09Y621.jpg");
+        list.add("http://s4.sinaimg.cn/mw690/001ve3i3zy6SziUdgH143&690");
+        list.add("http://pic2.16pic.com/00/17/06/16pic_1706842_b.jpg");
+        list.add("http://pic28.photophoto.cn/20130704/0036036875112446_b.jpg");
+        list.add("http://pic1.16pic.com/00/04/83/16pic_483177_b.jpg");
+        list.add("http://photo.16pic.com/00/10/09/16pic_1009413_b.jpg");
+        list.add("http://b-ssl.duitang.com/uploads/item/201508/06/20150806223218_xAJQS.jpeg");
 
         findViewById(R.id.btn_picture).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent=new Intent(MainActivity.this,TestProvider.class);
+                Intent intent = new Intent(MainActivity.this, TestProvider.class);
                 startActivity(intent);
             }
         });
