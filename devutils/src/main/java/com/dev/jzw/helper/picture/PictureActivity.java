@@ -278,7 +278,6 @@ public class PictureActivity extends AppCompatActivity {
                         }
                     });
 
-
         }
 
     }

@@ -7,23 +7,58 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.2.0'
         classpath 'com.novoda:bintray-release:+'
     }
 }
 
+//allprojects {
+//    repositories {
+//        google()
+//        jcenter()
+//        maven { url "https://jitpack.io" }
+//    }
+//    //编码 ，javadoc 检查忽略
+//    tasks.withType(Javadoc) {
+//        options.addStringOption('Xdoclint:none', '-quiet')
+//        options.addStringOption('encoding', 'UTF-8')
+//    }
+//}
+
+
+
+def addRepos(RepositoryHandler handler) {
+    handler.google()
+    handler.jcenter()
+    handler.maven { url "https://jitpack.io" }
+}
+
 allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
+    addRepos(repositories)
+    subprojects {
+        project.configurations.all {
+            resolutionStrategy.eachDependency { details ->
+                if (details.requested.group == 'com.android.support'
+                        && !details.requested.name.contains('multidex')) {
+                    details.useVersion "26.1.0"
+                }
+            }
+        }
     }
+// 组件缓存更新时间设置（默认每次build都更新）
+    configurations.all {
+        resolutionStrategy.cacheDynamicVersionsFor 0, 'minutes' // 动态版本
+        resolutionStrategy.cacheChangingModulesFor 0, 'minutes' // 变化模块
+    }
+
     //编码 ，javadoc 检查忽略
     tasks.withType(Javadoc) {
         options.addStringOption('Xdoclint:none', '-quiet')
         options.addStringOption('encoding', 'UTF-8')
     }
 }
+
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir
