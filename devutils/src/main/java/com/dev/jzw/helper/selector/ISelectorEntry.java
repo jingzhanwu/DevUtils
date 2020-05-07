@@ -1,6 +1,6 @@
 package com.dev.jzw.helper.selector;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 import java.util.List;
 
@@ -33,6 +33,6 @@ public interface ISelectorEntry<T extends ISelectorEntry> {
      *
      * @return
      */
-    List<T> getSelectorChildreen();
+    List<T> getSelectorChildren();
 
 }

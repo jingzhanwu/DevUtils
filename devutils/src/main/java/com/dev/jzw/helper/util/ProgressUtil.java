@@ -25,8 +25,8 @@ public class ProgressUtil {
      * @param activity
      * @return
      */
-    public static ProgressDialog showLoadding(Activity activity) {
-        return showLoadding(activity, null);
+    public static ProgressDialog showLoading(Activity activity) {
+        return showLoading(activity, null);
     }
 
     /**
@@ -36,7 +36,7 @@ public class ProgressUtil {
      * @param msg
      * @return
      */
-    public static ProgressDialog showLoadding(Activity activity, String msg) {
+    public static ProgressDialog showLoading(Activity activity, String msg) {
         mReference = new WeakReference<>(activity);
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             return mProgressDialog;
@@ -49,7 +49,7 @@ public class ProgressUtil {
 
             @Override
             public void onCancel(DialogInterface dialog) {
-                hideLoadding();
+                hideLoading();
             }
         });
         mProgressDialog.setMessage(TextUtils.isEmpty(msg) ? "请稍候..." : msg);
@@ -60,7 +60,7 @@ public class ProgressUtil {
     /**
      * 隐藏对话框，并且释放相关资源
      */
-    public static void hideLoadding() {
+    public static void hideLoading() {
         if (mProgressDialog != null) {
             if (mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
