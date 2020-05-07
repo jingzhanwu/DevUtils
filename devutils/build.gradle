@@ -28,4 +28,4 @@ dependencies {
     api 'com.bm.photoview:library:1.4.1'
 }
 
-apply from: "upload.gradle"
+//apply from: "upload.gradle"
