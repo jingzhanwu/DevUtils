@@ -44,24 +44,31 @@
 .大图查看器
                    
     1、查看网络图片，带有下载功能
+        ```
              PictureView.with(this)
                        .setUrls(urls, 0)
                        .enableDownload(true)
                        .create();
+         ```
                        
     2、开启关闭 删除 和下载功能
+        ```
           PictureView.enableDelete(true)
           PictureView.enableDownload(true)
+        ```
      
 
 .仿京东多级列表选择器
 
       1、设置容器view
+        ```
          content = findViewById(R.id.content);
+        ```
 
       2、初始化数据
          具体的实体实现ISelectorEntry接口,并实现对应方法
-         public class DicTestInfo implements ISelectorEntry<DicTestInfo> {
+
+        ``` public class DicTestInfo implements ISelectorEntry<DicTestInfo> {
 
              private String id;
              private String value;
@@ -85,9 +92,9 @@
              }
 
             }
-
+        ```
        3、初始化选择器
-
+        ```
           SelectorProvider provider = new SelectorProvider(this, 3);
              provider.setData(list);
 
@@ -108,11 +115,12 @@
 
                  }
              });
-
+          ```
         4、添加选择器到viewGroup
-
+          ```
             View view = provider.getSelectorView();
             content.addView(view, 0);
+          ```
 
 
 想体验MVP开发的点这里
