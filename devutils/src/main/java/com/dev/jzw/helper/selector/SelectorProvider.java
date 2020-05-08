@@ -11,7 +11,6 @@ import android.os.Message;
 
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
-import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;

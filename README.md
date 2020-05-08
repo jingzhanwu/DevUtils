@@ -1,14 +1,13 @@
 # DevUtils
-Android开发工具类，常用的文件操作，bitmap操作，数据库操作，Toast显示，Dialog，权限管理等
+## Android开发工具类，常用的文件操作，bitmap操作，数据库操作，Toast显示，Dialog，权限管理等
 
-如何使用：
+### 如何使用：
+`implementation 'com.jzw.dev:devutils:3.3'`
 
-compile 'com.jzw.dev:devutils:3.3'
+#### Androidx支持
+`implementation 'com.jzw.dev:devutils:4.0'`
 
-Androidx
-compile 'com.jzw.dev:devutils:4.0'
-
-·支持数据库操作，继承BaseDao，实现对应的方法即可。
+·支持数据库操作，继承BaseDao，实现对应的方法即可
 
 ·Bitmap相关操作，使用BitmapUtil
 
