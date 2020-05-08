@@ -38,7 +38,7 @@ public class DicTestInfo implements ISelectorEntry<DicTestInfo> {
     }
 
     @Override
-    public List<DicTestInfo> getSelectorChildreen() {
+    public List<DicTestInfo> getSelectorChildren() {
         return getList();
     }
 

@@ -8,7 +8,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
+
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,6 +173,14 @@ public class SelectorProvider<T extends ISelectorEntry> implements AdapterView.O
         }
 
         changeData(mCurrentTabIndex, mDatas);
+    }
+
+    public void destory() {
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+
     }
 
     /**
@@ -373,12 +383,12 @@ public class SelectorProvider<T extends ISelectorEntry> implements AdapterView.O
         mAdapters.get(mCurrentTabIndex).notifyDataSetChanged();
 
         //如果没有下一级则直接返回
-        if (Lists.isEmpty(data.getSelectorChildreen())) {
+        if (Lists.isEmpty(data.getSelectorChildren())) {
             return;
         }
 
         //更新显示下一级列表
-        changeData(mCurrentTabIndex + 1, data.getSelectorChildreen());
+        changeData(mCurrentTabIndex + 1, data.getSelectorChildren());
 
         //清空下一级数据
         int adapterCount = mAdapters.size();

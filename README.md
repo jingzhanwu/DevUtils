@@ -1,12 +1,13 @@
 # DevUtils
-Android开发工具类，常用的文件操作，bitmap操作，数据库操作，Toast显示，Dialog，权限管理等
+## Android开发工具类，常用的文件操作，bitmap操作，数据库操作，Toast显示，Dialog，权限管理等
 
-如何使用：
+### 如何使用：
+`implementation 'com.jzw.dev:devutils:3.3'`
 
+#### Androidx支持
+`implementation 'com.jzw.dev:devutils:4.0'`
 
-compile 'com.jzw.dev:devutils:3.3'
-
-·支持数据库操作，继承BaseDao，实现对应的方法即可。
+·支持数据库操作，继承BaseDao，实现对应的方法即可
 
 ·Bitmap相关操作，使用BitmapUtil
 
@@ -38,19 +39,7 @@ compile 'com.jzw.dev:devutils:3.3'
 
 .支持缩放的 PhotoView
 
-·自定义的TitleBar，支持高度，背景色，图标自定义
-
-       <com.dev.jzw.helper.widget.CustomTitleBar
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:jzw_bar_backColor="#333"
-          app:jzw_bar_backResources="@drawable/icon_back"
-          app:jzw_bar_rightResources="@drawable/icon1"
-          app:jzw_bar_showLeftView="true"
-          app:jzw_bar_showRightView="false"
-          app:jzw_bar_title="标题"
-          app:jzw_bar_titleColor="#ccc"
-          app:jzw_bar_titleSize="18sp" />
+.支持Androidx
           
 .大图查看器
                    

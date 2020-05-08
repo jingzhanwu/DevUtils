@@ -1,14 +1,13 @@
 package com.jzw.dev.demo;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.dev.jzw.helper.picture.OnDeleteItemListener;
-import com.dev.jzw.helper.picture.PictureActivity;
 import com.dev.jzw.helper.picture.PictureView;
 import com.dev.jzw.helper.util.FileUtil;
 import com.dev.jzw.helper.util.PermissionUtil;
